@@ -1,0 +1,16 @@
+#version 330
+
+in vec2 vFragmentTextureCoords;
+in vec3 vDiffuseLight;
+in vec4 vSpecularLight;
+in vec3 vAmbientLight;
+out vec4 FragColor;
+
+uniform sampler2D uTexture;
+
+void main()
+{	
+	vec4 vTextureColour = texture(uTexture, vFragmentTextureCoords);
+
+	FragColor =  vec4(vDiffuseLight, 1.0) * vTextureColour + vec4(vAmbientLight,1.0)*vTextureColour + vSpecularLight;
+}

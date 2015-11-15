@@ -1,0 +1,53 @@
+#version 330
+
+in vec3 vPosition;
+in vec2 vTextureCoords;
+in vec3 vNormal;
+
+out vec2 vFragmentTextureCoords;
+out vec3 vDiffuseLight;
+out vec4 vSpecularLight;
+out vec3 vAmbientLight;
+
+uniform mat4 mModelMatrix;
+uniform mat4 mProjectionMatrix;
+uniform mat4 mViewMatrix;
+
+uniform vec3 vLightColour;
+uniform vec3 vLightPosition;
+
+const float fShineDamper = 0.1;
+const float fReflectivity = 0.3;
+
+void main()
+{
+
+	vec4 vWorldPosition = mModelMatrix * vec4(vPosition.xyz, 1.0);
+	vec4 vWorldNormal = mModelMatrix * vec4(vNormal.xyz, 0.0);
+	vec4 vRelativePosition = mViewMatrix * vWorldPosition;
+
+	gl_Position = mProjectionMatrix * vRelativePosition;
+
+	vFragmentTextureCoords = vTextureCoords;
+
+	//Light Vector Calculations
+	vec3 vModelNormal = normalize(vWorldNormal.xyz);
+	vec3 vToLightVector = normalize(vLightPosition - (vWorldPosition.xyz));
+	vec3 vToCameraVector = (inverse(mViewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - vWorldPosition.xyz;
+
+	//Light Calculations	
+	float fBrightness = max(dot(vModelNormal, vToLightVector), 0.1);	
+
+	vec3 vReflectedLight = reflect(-vToLightVector, vModelNormal);	
+
+	float fSpecularFactor = max( dot( vReflectedLight, normalize(vToCameraVector) ), 0.1);	
+
+	float vAmbientStrength = 0.2f;
+	
+	vAmbientLight = vec3(vAmbientStrength,vAmbientStrength,vAmbientStrength);
+	vDiffuseLight = fBrightness * vLightColour;
+	vSpecularLight = vec4(pow(fSpecularFactor, fShineDamper) * fReflectivity * vLightColour, 1.0);
+}
+
+
+  
