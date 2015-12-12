@@ -45,6 +45,16 @@ struct vec3 {
 	vec3 operator/ (float rhs);
 	//! because users expect this too
 	vec3& operator= (const vec3& rhs);
+
+	// vector functions
+	//static float length (const vec3& v);
+	//static float length2 (const vec3& v);
+	static vec3 normalise (const vec3& v);
+	//static float dot (const vec3& a, const vec3& b);
+	//static vec3 cross (const vec3& a, const vec3& b);
+	//static float get_squared_dist (vec3 from, vec3 to);
+	//static float direction_to_heading (vec3 d);
+	//static vec3 heading_to_direction (float degrees);
 	
 	//! internal data
 	float v[3];
@@ -107,7 +117,7 @@ void print (const vec3& v);
 void print (const vec4& v);
 void print (const mat3& m);
 void print (const mat4& m);
-// vector functions
+//// vector functions
 float length (const vec3& v);
 float length2 (const vec3& v);
 vec3 normalise (const vec3& v);

@@ -11,28 +11,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Noise.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="maths_funcs.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="quaternion.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="main (1).cpp" />
     <ClCompile Include="maths_funcs.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Noise.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Shaders\lampVertexShader.txt" />
     <Text Include="..\Shaders\simpleFragmentShader.txt" />
     <Text Include="..\Shaders\simpleVertexShader.txt" />
-    <Text Include="lampFragmentShader.txt" />
-    <Text Include="lightingFragmentShader.txt" />
-    <Text Include="lightingVertexShader.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Shaders\monkeyhead.dae" />
-    <None Include="..\test.dae" />
+    <Text Include="..\Shaders\skybox_fragShader.txt" />
+    <Text Include="..\Shaders\skybox_vertexShader.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{869D5E4B-5282-429C-BD60-199A138E3DE2}</ProjectGuid>
@@ -67,12 +69,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\glew-1.10.0\include;$(SolutionDir)\freeglut\include;$(SolutionDir)\soil\Simple OpenGL Image Library\src;$(SolutionDir)\assimp\include;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\freeglut\include;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\glew-1.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\GraphicsProject\GraphicsProject\glfw-3.1.2.bin.WIN32\include;$(SolutionDir)\glew-1.10.0\include;$(SolutionDir)\soil\Simple OpenGL Image Library\src;$(SolutionDir)\assimp\include;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\freeglut\include;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\glew-1.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\assimp\lib\Debug;$(SolutionDir)\glew-1.10.0\lib\Release\Win32;$(SolutionDir)\freeglut\lib;$(SolutionDir)\soil\Simple OpenGL Image Library\lib;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab5\assimp\lib\Debug;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\glew-1.10.0\lib\Release\Win32;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;glew32.lib;assimp.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\GraphicsProject\GraphicsProject\glfw-3.1.2.bin.WIN32\lib-vc2012;$(SolutionDir)\assimp\lib\Debug;$(SolutionDir)\glew-1.10.0\lib\Release\Win32;$(SolutionDir)\soil\Simple OpenGL Image Library\lib;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab5\assimp\lib\Debug;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\glew-1.10.0\lib\Release\Win32;C:\Users\Deirdre Meehan\Desktop\ComputerGraphics\Lab1\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;assimp.lib;SOIL.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

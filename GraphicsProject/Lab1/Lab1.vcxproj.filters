@@ -33,12 +33,36 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maths_funcs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="main (1).cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Noise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -49,25 +73,11 @@
     <Text Include="..\Shaders\simpleVertexShader.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="lightingVertexShader.txt">
+    <Text Include="..\Shaders\skybox_fragShader.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="lightingFragmentShader.txt">
+    <Text Include="..\Shaders\skybox_vertexShader.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="lampFragmentShader.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="..\Shaders\lampVertexShader.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Shaders\monkeyhead.dae">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\test.dae">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

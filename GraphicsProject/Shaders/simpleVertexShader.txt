@@ -15,20 +15,23 @@ uniform mat4 mViewMatrix;
 
 uniform vec3 vLightColour;
 uniform vec3 vLightPosition;
+uniform float vAmbientStrength;
 
-const float fShineDamper = 0.1;
-const float fReflectivity = 0.3;
+uniform int tiling;
+
+const float fShineDamper = 32;
+const float fReflectivity = 0.9;
 
 void main()
 {
-
+	//float vAmbientStrength = 0.5f;
 	vec4 vWorldPosition = mModelMatrix * vec4(vPosition.xyz, 1.0);
 	vec4 vWorldNormal = mModelMatrix * vec4(vNormal.xyz, 0.0);
 	vec4 vRelativePosition = mViewMatrix * vWorldPosition;
 
 	gl_Position = mProjectionMatrix * vRelativePosition;
 
-	vFragmentTextureCoords = vTextureCoords;
+	vFragmentTextureCoords = vTextureCoords*64;
 
 	//Light Vector Calculations
 	vec3 vModelNormal = normalize(vWorldNormal.xyz);
@@ -40,13 +43,13 @@ void main()
 
 	vec3 vReflectedLight = reflect(-vToLightVector, vModelNormal);	
 
-	float fSpecularFactor = max( dot( vReflectedLight, normalize(vToCameraVector) ), 0.1);	
+	float fSpecularFactor = max( dot( vReflectedLight, normalize(vToCameraVector) ), vAmbientStrength);	
 
-	float vAmbientStrength = 0.2f;
+	
 	
 	vAmbientLight = vec3(vAmbientStrength,vAmbientStrength,vAmbientStrength);
 	vDiffuseLight = fBrightness * vLightColour;
-	vSpecularLight = vec4(pow(fSpecularFactor, fShineDamper) * fReflectivity * vLightColour, 1.0);
+	vSpecularLight = vec4(pow(fSpecularFactor, fShineDamper) * fReflectivity * vLightColour, vAmbientStrength);
 }
 
 
