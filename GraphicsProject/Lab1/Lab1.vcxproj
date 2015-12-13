@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ModelView.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Noise.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="main (1).cpp" />
     <ClCompile Include="maths_funcs.cpp" />
@@ -35,6 +37,10 @@
     <Text Include="..\Shaders\simpleVertexShader.txt" />
     <Text Include="..\Shaders\skybox_fragShader.txt" />
     <Text Include="..\Shaders\skybox_vertexShader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\LightFragmentShader.glsl" />
+    <None Include="..\Shaders\LightVertexShader.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{869D5E4B-5282-429C-BD60-199A138E3DE2}</ProjectGuid>

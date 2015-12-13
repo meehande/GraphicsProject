@@ -6,6 +6,9 @@ Mesh::Mesh()
 	glGenVertexArrays(1, &id);
 	this->mesh_vao = id;
 	this->BufferIds = std::vector<int>();
+	loc1 = 0;//positions
+	loc2 = 2;//normals
+	loc3 = 1;//textures
 }
 
 
@@ -73,17 +76,23 @@ void Mesh::generateObjectBufferMesh(const char* name, Shader* meshShader)
 
 	unsigned int n_vbos = 3;
 	//GenVertexArray
-	glGenVertexArrays(1, &mesh_vao);
-	glBindVertexArray(mesh_vao);
-
+	//glGenVertexArrays(1, &mesh_vao);
+	//glBindVertexArray(mesh_vao);
+	
 	loc1 = glGetAttribLocation(meshShader->Program, "vPosition");
 	loc2 = glGetAttribLocation(meshShader->Program, "vNormal");
 	loc3 = glGetAttribLocation(meshShader->Program, "vTextureCoords");
+
+
 	//GenVBOs & fill data
 	generateBuffers(n_vbos);
+	glBindVertexArray(mesh_vao);
+	
 	fillBufferData(loc1,3, &g_vp[0], g_point_count, GL_STATIC_DRAW);
 	fillBufferData(loc2,3, &g_vn[0], g_point_count, GL_STATIC_DRAW);
 	fillBufferData(loc3,2, &g_vt[0], g_point_count, GL_STATIC_DRAW);
+
+	cout << "BufferID0: " << BufferIds.data() <<endl;
 
 	//Unbind
 	glDisableVertexAttribArray(loc1);
@@ -135,15 +144,17 @@ void Mesh::unbind(){
 	glDisableVertexAttribArray(loc1);
 	glDisableVertexAttribArray(loc2);
 	glDisableVertexAttribArray(loc3);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
 
 void Mesh::generateBuffers(int n){
+//	glGenVertexArrays(1, &mesh_vao);
 	GLuint* vbo = new GLuint[n];
 	glBindVertexArray(mesh_vao);
 	glGenBuffers(n, vbo);
 	for (int i = 0; i<n; i++)
-		BufferIds.push_back(vbo[i]);
+		this->BufferIds.push_back(vbo[i]);
 	delete[] vbo;
 }
 

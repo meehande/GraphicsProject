@@ -4,43 +4,37 @@
 #include <mmsystem.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include "maths_funcs.h"
+
+
+
 #include "Terrain.h"
-#include <SOIL.h>
-
-// Assimp includes
-
-#include <assimp/cimport.h> // C importer
-#include <assimp/scene.h> // collects data
-#include <assimp/postprocess.h> // various extra operations
-#include <stdio.h>
-#include <math.h>
-#include <vector> // STL dynamic memory.
-
-#include "Mesh.h"
-#include "Shader.h"
+#include "ModelView.h"
 
 // VARIABLES
 Shader* meshShader;
 Shader* monkeyShader;
 Shader* skyboxShader;
+Shader* terrainShader;
 
 Mesh* mountain_mesh;
 Mesh* monkey_mesh;
 Mesh* sphere_mesh;
 Mesh* moon_mesh;
+Mesh* tree;
 
-Terrain* terrainModel = NULL;
+Terrain* terrain = NULL;
+
+ModelView* camera;
+ModelView* terrainPos;
 
 GLuint skyboxVAO;
 GLuint cubemapTexture;
 
+vec3 LightDirection = vec3(-0.1f, -1, 0);
+vec3 LightColour = vec3(1, 1, 1);
+vec3 SkyColour = vec3(178 / 256.0f, 110 / 256.0f, 58 / 256.0f);
+
 bool keys[256];
-
-std::vector<float> g_vp, g_vn, g_vt;
-int g_point_count = 0;
-
 
 // Macro for indexing vertex buffer
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -61,6 +55,7 @@ GLfloat rotate_view_y = 0.0;
 // Light attributes
 vec3 lightPos(3.0f, 1.0f, 0.0f);
 
+#pragma region SKYBOX 
 GLuint loadCubemap(vector<const GLchar*> faces)
 {
     GLuint textureID;
@@ -91,56 +86,56 @@ GLuint loadCubemap(vector<const GLchar*> faces)
     return textureID;
 }  
 
-    GLfloat skyboxVertices[] = {
-        // Positions          
-        -1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
+GLfloat skyboxVertices[] = {
+    // Positions          
+    -1.0f,  1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
   
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
   
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
    
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
   
-        -1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,
   
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f
-    };
-
-
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f
+};
+#pragma endregion
 
 
 void display()
 {
+	glClearColor(SkyColour.v[0], SkyColour.v[1], SkyColour.v[2], 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	glEnable (GL_DEPTH_TEST); // enable depth-testing	
 	glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
@@ -154,7 +149,7 @@ void display()
     glDepthMask(GL_FALSE);// Remember to turn depth writing off
 
 	skyboxShader->use();
-    glUniformMatrix4fv(glGetUniformLocation(skyboxShader->Program, "view"), 1, GL_FALSE,view.m);
+	glUniformMatrix4fv(glGetUniformLocation(skyboxShader->Program, "view"), 1, GL_FALSE,identity_mat4 ().m);
     glUniformMatrix4fv(glGetUniformLocation(skyboxShader->Program, "projection"), 1, GL_FALSE, persp_proj.m);
     // skybox cube
     glBindVertexArray(skyboxVAO);
@@ -177,24 +172,62 @@ void display()
     GLint lightColorLoc  = glGetUniformLocation(meshShader->Program, "vLightColour");
 	GLint ambientStrengthLoc = glGetUniformLocation(meshShader->Program, "vAmbientStrength");
 	GLint tileFactorLoc = glGetUniformLocation(meshShader->Program, "tiling");
-	glUniform3f(lightPosLoc, 1.0f, 0.5f, 0.31f);
-    glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
+	
+    
 	glUniform1f(ambientStrengthLoc, 0.1f);
 	glUniform1f(tileFactorLoc, 64);
+	glUniform3f(lightPosLoc, 1.0f, 0.5f, 0.31f);
+    glUniform3f(lightColorLoc,  LightColour.v[0],LightColour.v[1], LightColour.v[2]);
 
-	
+	model = terrainPos->CreateModelMatrix();
 	view = translate (view, vec3 (0.0, -20.0f, 183.0f));
 	view = translate(view, vec3(translate_view_x, translate_view_y, translate_view_z));
 	view = rotate_y_deg(view, rotate_view_y);
 	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, persp_proj.m);
-	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, view.m);
+	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, camera->CreateViewMatrix().m);
 	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, model.m);
 	mountain_mesh->draw();
 	mountain_mesh->unbind();
 
-	terrainModel->bind();
-	terrainModel->Render(GL_TRIANGLES);
-	terrainModel->unbind();
+
+	//tree - child of terrain
+	tree->bind();
+	mat4 childlocalmat1 = identity_mat4();
+	
+	childlocalmat1 = translate(childlocalmat1, vec3(0,10,0));
+	childlocalmat1 = scale(childlocalmat1, vec3(4,4,4));
+	mat4 childglobalmat1 = model*childlocalmat1;
+	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, persp_proj.m);
+	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, camera->CreateViewMatrix().m);
+	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, childglobalmat1.m);
+	tree->draw();
+	tree->unbind();
+
+	//meshShader->use();
+	terrain->bind();
+	matrix_location = glGetUniformLocation (terrainShader->Program, "mModelMatrix");
+	view_mat_location = glGetUniformLocation (terrainShader->Program, "mViewMatrix");
+	proj_mat_location = glGetUniformLocation (terrainShader->Program, "mProjectionMatrix");
+	lightPosLoc = glGetUniformLocation(terrainShader->Program, "vLightPosition");
+    lightColorLoc  = glGetUniformLocation(terrainShader->Program, "vLightColour");
+	int lightDirectionLoc= glGetUniformLocation(terrainShader->Program, "vLightDirection");
+	int viewPosLoc= glGetUniformLocation(terrainShader->Program, "vViewPosition");
+	int skyColLoc = glGetUniformLocation(terrainShader->Program, "vSkyColour");
+	glUniform3f(lightPosLoc, 1.0f, 0.5f, 0.31f);
+    glUniform3f(lightColorLoc,  LightColour.v[0],LightColour.v[1], LightColour.v[2]);
+	glUniform3f(lightDirectionLoc, LightDirection.v[0],LightDirection.v[1], LightDirection.v[2]);
+	glUniform3f(skyColLoc, SkyColour.v[0], SkyColour.v[1], SkyColour.v[2]);
+	glUniform3f(viewPosLoc, camera->Position.v[0],camera->Position.v[1],camera->Position.v[2]);
+	//glUniform1f(tileFactorLoc, 64);	
+	view = translate (view, vec3 (0.0, -20.0f, 183.0f));
+	view = translate(view, vec3(translate_view_x, translate_view_y, translate_view_z));
+	view = rotate_y_deg(view, rotate_view_y);
+	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, persp_proj.m);
+	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, camera->CreateViewMatrix().m);
+	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, model.m);
+	terrain->Render(GL_TRIANGLES);
+	terrain->unbind();
+
 
 	/*monkey_mesh->bind();
 
@@ -255,21 +288,40 @@ void updateScene(GLFWwindow* window)
 	keypress(window);
 	// rotate the model slowly around the y axis
 	rotate_y+=0.35f;
+	float terrainHeight = terrain->GetHeight(camera->Position, terrainPos->Position);
+	if (camera->Position.v[1] < terrainHeight){
+		camera->Position.v[1] = terrainHeight;
+		cout << "on terrain " << terrainHeight << endl;
+	}
+	
 }
 
 
 void init()
 {
-	//Shader
+	//Shaders
 	meshShader = new Shader("../Shaders/simpleVertexShader.txt", "../Shaders/simpleFragmentShader.txt");
 	glUniform1i(glGetUniformLocation(meshShader->Program, "uTexture"), 0); 
 
 	skyboxShader = new Shader("../Shaders/skybox_vertexShader.txt", "../Shaders/skybox_fragShader.txt");
 
+	terrainShader = new Shader("../Shaders/LightVertexShader.glsl","../Shaders/LightFragmentShader.glsl");
+
+	//Terrain
+	terrain = new Terrain(0, 0, 1025, 1025, 8.0f, 64.0f, 22.0f, 0.25f, 4);
+	terrain->loadTexture("../Rocks.jpg");
+	terrainPos = new ModelView(vec3(500, 10, 500), vec3(0, 0, 0), 29.0f, 1.0f);	
+	
 	//mountain
 	mountain_mesh = new Mesh();
 	mountain_mesh->generateObjectBufferMesh("../mesh.obj", meshShader);
 	mountain_mesh ->loadTexture("../Rocks.jpg");
+
+	//tree
+
+	tree = new Mesh();
+	tree->generateObjectBufferMesh("../untitled.obj", terrainShader);
+	
 	
 	//monkey
 	//monkey_mesh = new Mesh();
@@ -286,8 +338,8 @@ void init()
 	//moon_mesh->generateObjectBufferMesh("../sphere.obj", meshShader);
 	//moon_mesh ->loadTexture("../Moon.jpg");
 
-	terrainModel = new Terrain(0, 0, 1025, 1025, 8.0f, 64.0f, 22.0f, 0.25f, 4);
-	terrainModel->loadTexture("../Mystery.jpg");
+	camera = new ModelView(vec3(500, 10, 500), vec3(0, 0, 0), 2.0f, 1.0f);	
+	cout << "Position: " <<  terrain->GetHeight(camera->Position, terrainPos->Position) << endl;
 
 	 // Setup skybox VAO
     GLuint skyboxVBO;
@@ -313,7 +365,6 @@ void init()
 }
 
 
-// Placeholder code for the keypress
 void keypress(GLFWwindow* window) 
 {
 	//press = keydown
@@ -321,22 +372,26 @@ void keypress(GLFWwindow* window)
 	if(glfwGetKey(window, GLFW_KEY_D)==GLFW_PRESS)
 	{
 		translate_view_x -= move_amount;
+		camera->Right();
 		//Translate the base, etc.
 	}
 	if(glfwGetKey(window, GLFW_KEY_A)==GLFW_PRESS)
 	{
 		translate_view_x += move_amount;
 		//Translate the base, etc.
+		camera->Left();
 	}
 	if(glfwGetKey(window, GLFW_KEY_S)==GLFW_PRESS)
 	{
 		translate_view_y += move_amount;
+		camera->Backward();
 		//Translate the base, etc.
 	}
 	if(glfwGetKey(window, GLFW_KEY_W)==GLFW_PRESS)
 	{
 		translate_view_y -= move_amount;
 		//Translate the base, etc.
+		camera->Forward();
 	}
 	if(glfwGetKey(window, GLFW_KEY_Z)==GLFW_PRESS)
 	{

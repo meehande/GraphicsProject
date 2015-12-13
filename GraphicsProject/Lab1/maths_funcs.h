@@ -55,7 +55,7 @@ struct vec3 {
 	//static float get_squared_dist (vec3 from, vec3 to);
 	//static float direction_to_heading (vec3 d);
 	//static vec3 heading_to_direction (float degrees);
-	
+	static vec3 negate(const vec3&);
 	//! internal data
 	float v[3];
 };
@@ -95,6 +95,14 @@ struct mat4 {
 	mat4 operator* (const mat4& rhs);
 	mat4& operator= (const mat4& rhs);
 	float m[16];
+	// affine functions
+	static mat4 translate (const mat4& m, const vec3& v);
+	static mat4 rotate_x_deg (const mat4& m, float deg);
+	static mat4 rotate_y_deg (const mat4& m, float deg);
+	static mat4 rotate_z_deg (const mat4& m, float deg);
+	static mat4 rotate_deg(const mat4& m, const vec3& v);
+	static mat4 scale(const mat4& m, const vec3& v);
+	static mat4 scale(const mat4& m, const float&);
 };
 
 struct versor {

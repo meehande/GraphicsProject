@@ -236,6 +236,11 @@ vec3& vec3::operator= (const vec3& rhs) {
 	return *this;
 }
 
+vec3 vec3::negate(const vec3& v)
+{
+	return vec3(-v.v[0], -v.v[1], -v.v[2]);
+}
+
 float dot (const vec3& a, const vec3& b) {
 	return a.v[0] * b.v[0] + a.v[1] * b.v[1] + a.v[2] * b.v[2];
 }
@@ -472,12 +477,80 @@ mat4 rotate_z_deg (const mat4& m, float deg) {
 	return m_r * m;
 }
 
+// translate a 4d matrix with xyz array
+mat4 mat4::translate (const mat4& m, const vec3& v) {
+	mat4 m_t = identity_mat4 ();
+	m_t.m[12] = v.v[0];
+	m_t.m[13] = v.v[1];
+	m_t.m[14] = v.v[2];
+	return m_t * m;
+}
+
+// rotate around x axis by an angle in degrees
+mat4 mat4::rotate_x_deg (const mat4& m, float deg) {
+	// convert to radians
+	float rad = deg * ONE_DEG_IN_RAD;
+	mat4 m_r = identity_mat4 ();
+	m_r.m[5] = cos (rad);
+	m_r.m[9] = -sin (rad);
+	m_r.m[6] = sin (rad);
+	m_r.m[10] = cos (rad);
+	return m_r * m;
+}
+
+// rotate around y axis by an angle in degrees
+mat4 mat4::rotate_y_deg (const mat4& m, float deg) {
+	// convert to radians
+	float rad = deg * ONE_DEG_IN_RAD;
+	mat4 m_r = identity_mat4 ();
+	m_r.m[0] = cos (rad);
+	m_r.m[8] = sin (rad);
+	m_r.m[2] = -sin (rad);
+	m_r.m[10] = cos (rad);
+	return m_r * m;
+}
+
+// rotate around z axis by an angle in degrees
+mat4 mat4::rotate_z_deg (const mat4& m, float deg) {
+	// convert to radians
+	float rad = deg * ONE_DEG_IN_RAD;
+	mat4 m_r = identity_mat4 ();
+	m_r.m[0] = cos (rad);
+	m_r.m[4] = -sin (rad);
+	m_r.m[1] = sin (rad);
+	m_r.m[5] = cos (rad);
+	return m_r * m;
+}
+
+mat4 mat4::rotate_deg(const mat4& m, const vec3& v)
+{
+	return rotate_x_deg(rotate_y_deg(rotate_z_deg(m, v.v[2]), v.v[1]), v.v[0]);
+}
+
 // scale a matrix by [x, y, z]
 mat4 scale (const mat4& m, const vec3& v) {
 	mat4 a = identity_mat4 ();
 	a.m[0] = v.v[0];
 	a.m[5] = v.v[1];
 	a.m[10] = v.v[2];
+	return a * m;
+}
+
+// scale a matrix by [x, y, z]
+mat4 mat4::scale (const mat4& m, const vec3& v) {
+	mat4 a = identity_mat4 ();
+	a.m[0] = v.v[0];
+	a.m[5] = v.v[1];
+	a.m[10] = v.v[2];
+	return a * m;
+}
+
+mat4 mat4::scale(const mat4& m, const float& v)
+{
+	mat4 a = identity_mat4();
+	a.m[0] = v;
+	a.m[5] = v;
+	a.m[10] = v;
 	return a * m;
 }
 

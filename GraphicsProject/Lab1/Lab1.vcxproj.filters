@@ -45,6 +45,9 @@
     <ClInclude Include="Buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModelView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maths_funcs.cpp">
@@ -65,6 +68,9 @@
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ModelView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Shaders\simpleFragmentShader.txt">
@@ -79,5 +85,13 @@
     <Text Include="..\Shaders\skybox_vertexShader.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\LightFragmentShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\LightVertexShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

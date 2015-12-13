@@ -100,13 +100,20 @@ void Terrain::Init()
 		}
 	}
 
+	
+	glBindVertexArray(mesh_vao);
+
 	this->generateBuffers(3);
+
+
+
 	this->fillBufferData(0, 3, fPositions.data(), this->WidthHeight, GL_STATIC_DRAW);
-	this->fillBufferData(1, 3, fNormals.data(), this->WidthHeight, GL_STATIC_DRAW);
-	this->fillBufferData(2, 2, fTextures.data(), this->WidthHeight, GL_STATIC_DRAW);
+	this->fillBufferData(2, 3, fNormals.data(), this->WidthHeight, GL_STATIC_DRAW);
+	this->fillBufferData(1, 2, fTextures.data(), this->WidthHeight, GL_STATIC_DRAW);
 
 	this->IndexBuffer = new Buffer(GL_ELEMENT_ARRAY_BUFFER);
 	this->IndexBuffer->BufferData(iIndices.data(), iIndicesSize, 4, GL_STATIC_DRAW);
+	glBindVertexArray(0);
 }
 
 void Terrain::Render(int i)
