@@ -128,9 +128,6 @@ void Mesh::bind(){
 	glBindVertexArray(this->mesh_vao);
 	for(int i=0; i<BufferIds.size(); i++)
 		glEnableVertexAttribArray(i);
-	glEnableVertexAttribArray(loc1);
-	glEnableVertexAttribArray(loc2);
-	glEnableVertexAttribArray(loc3);
 		
 }
 void Mesh::draw(){
@@ -141,9 +138,6 @@ void Mesh::unbind(){
 	//Unbind Buffers, Shader and Texture
 	for(int i=0; i<BufferIds.size(); i++)
 		glDisableVertexAttribArray(i);
-	glDisableVertexAttribArray(loc1);
-	glDisableVertexAttribArray(loc2);
-	glDisableVertexAttribArray(loc3);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }

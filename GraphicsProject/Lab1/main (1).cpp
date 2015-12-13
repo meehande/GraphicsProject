@@ -4,9 +4,6 @@
 #include <mmsystem.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
-
-
 #include "Terrain.h"
 #include "ModelView.h"
 
@@ -88,47 +85,47 @@ GLuint loadCubemap(vector<const GLchar*> faces)
 
 GLfloat skyboxVertices[] = {
     // Positions          
-    -1.0f,  1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-        1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
   
-    -1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
   
-        1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
    
-    -1.0f, -1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
   
-    -1.0f,  1.0f, -1.0f,
-        1.0f,  1.0f, -1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	1.0f,  1.0f, -1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,
   
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-        1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-        1.0f, -1.0f,  1.0f
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	1.0f, -1.0f,  1.0f
 };
 #pragma endregion
 
@@ -138,16 +135,15 @@ void display()
 	glClearColor(SkyColour.v[0], SkyColour.v[1], SkyColour.v[2], 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	glEnable (GL_DEPTH_TEST); // enable depth-testing	
-	glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+
 
 	mat4 view = identity_mat4 ();
 	mat4 persp_proj = perspective(60.0, (float)width/(float)height, 0.1, -10.0);
 	mat4 model = identity_mat4 ();
  
 	
-	// Draw skybox first
+//--- SKYBOX ---------------------------------------------------------------//
     glDepthMask(GL_FALSE);// Remember to turn depth writing off
-
 	skyboxShader->use();
 	glUniformMatrix4fv(glGetUniformLocation(skyboxShader->Program, "view"), 1, GL_FALSE,identity_mat4 ().m);
     glUniformMatrix4fv(glGetUniformLocation(skyboxShader->Program, "projection"), 1, GL_FALSE, persp_proj.m);
@@ -158,8 +154,9 @@ void display()
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     glDepthMask(GL_TRUE);
-
+//------------------------------------------------------------------------//
     //TERRAIN
 	meshShader->use();
 	mountain_mesh->bind();
@@ -203,31 +200,31 @@ void display()
 	tree->draw();
 	tree->unbind();
 
-	//meshShader->use();
-	terrain->bind();
-	matrix_location = glGetUniformLocation (terrainShader->Program, "mModelMatrix");
-	view_mat_location = glGetUniformLocation (terrainShader->Program, "mViewMatrix");
-	proj_mat_location = glGetUniformLocation (terrainShader->Program, "mProjectionMatrix");
-	lightPosLoc = glGetUniformLocation(terrainShader->Program, "vLightPosition");
-    lightColorLoc  = glGetUniformLocation(terrainShader->Program, "vLightColour");
-	int lightDirectionLoc= glGetUniformLocation(terrainShader->Program, "vLightDirection");
-	int viewPosLoc= glGetUniformLocation(terrainShader->Program, "vViewPosition");
-	int skyColLoc = glGetUniformLocation(terrainShader->Program, "vSkyColour");
-	glUniform3f(lightPosLoc, 1.0f, 0.5f, 0.31f);
-    glUniform3f(lightColorLoc,  LightColour.v[0],LightColour.v[1], LightColour.v[2]);
-	glUniform3f(lightDirectionLoc, LightDirection.v[0],LightDirection.v[1], LightDirection.v[2]);
-	glUniform3f(skyColLoc, SkyColour.v[0], SkyColour.v[1], SkyColour.v[2]);
-	glUniform3f(viewPosLoc, camera->Position.v[0],camera->Position.v[1],camera->Position.v[2]);
-	//glUniform1f(tileFactorLoc, 64);	
-	view = translate (view, vec3 (0.0, -20.0f, 183.0f));
-	view = translate(view, vec3(translate_view_x, translate_view_y, translate_view_z));
-	view = rotate_y_deg(view, rotate_view_y);
-	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, persp_proj.m);
-	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, camera->CreateViewMatrix().m);
-	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, model.m);
-	terrain->Render(GL_TRIANGLES);
-	terrain->unbind();
+	glUseProgram(0); //unuse mesh shader
 
+	terrainShader->use();
+	terrain->bind();
+
+	int model_loc = glGetUniformLocation (terrainShader->Program, "mModelMatrix");
+	int view_loc = glGetUniformLocation (terrainShader->Program, "mViewMatrix");
+	int proj_loc = glGetUniformLocation (terrainShader->Program, "mProjectionMatrix");
+	int view_pos_loc = glGetUniformLocation(terrainShader->Program, "vViewPosition");
+    int sky_col_loc  = glGetUniformLocation(terrainShader->Program, "vSkyColour");
+	int light_col_loc = glGetUniformLocation(terrainShader->Program, "vLightColour");
+	int light_dir_loc = glGetUniformLocation(terrainShader->Program, "vLightDirection");
+
+	glUniformMatrix4fv(model_loc, 1, GL_FALSE, terrainPos->CreateModelMatrix().m);
+	glUniformMatrix4fv(view_loc, 1 , GL_FALSE, camera->CreateViewMatrix().m);
+	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, persp_proj.m);
+	glUniform3f(view_pos_loc, camera->Position.v[0], camera->Position.v[1],camera->Position.v[2] );
+	glUniform3f(sky_col_loc, SkyColour.v[0], SkyColour.v[1],SkyColour.v[2]);
+	glUniform3f(light_col_loc, LightColour.v[0], LightColour.v[1],LightColour.v[2]);
+	glUniform3f(light_dir_loc, LightDirection.v[0], LightDirection.v[1],LightDirection.v[2]);
+
+	terrain->Render(GL_TRIANGLES);
+
+	terrain->unbind();
+	glUseProgram(0);
 
 	/*monkey_mesh->bind();
 
@@ -289,9 +286,9 @@ void updateScene(GLFWwindow* window)
 	// rotate the model slowly around the y axis
 	rotate_y+=0.35f;
 	float terrainHeight = terrain->GetHeight(camera->Position, terrainPos->Position);
-	if (camera->Position.v[1] < terrainHeight){
+	if(camera->Position.v[1] < terrainHeight){
 		camera->Position.v[1] = terrainHeight;
-		cout << "on terrain " << terrainHeight << endl;
+		//cout << terrainHeight << endl;
 	}
 	
 }
@@ -339,7 +336,7 @@ void init()
 	//moon_mesh ->loadTexture("../Moon.jpg");
 
 	camera = new ModelView(vec3(500, 10, 500), vec3(0, 0, 0), 2.0f, 1.0f);	
-	cout << "Position: " <<  terrain->GetHeight(camera->Position, terrainPos->Position) << endl;
+	
 
 	 // Setup skybox VAO
     GLuint skyboxVBO;
